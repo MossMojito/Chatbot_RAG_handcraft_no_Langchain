@@ -21,37 +21,37 @@
 ```mermaid
 flowchart TD
     subgraph Scraper ["1. OCR-Enhanced Scraping"]
-        Web[Sports Website] -->|Auth & Crawl| Crawler[Crawl4AI Engine]
-        Crawler -->|Raw HTML| HTML_Parse[HTML Parser]
-        Crawler -->|Image URLs| OCR[Qwen2.5-VL OCR]
-        OCR -->|Extracted Text| Merger[Content Merger]
+        Web["Sports Website"] -->|Auth & Crawl| Crawler["Crawl4AI Engine"]
+        Crawler -->|Raw HTML| HTML_Parse["HTML Parser"]
+        Crawler -->|Image URLs| OCR["Qwen2.5-VL OCR"]
+        OCR -->|Extracted Text| Merger["Content Merger"]
         HTML_Parse --> Merger
-        Merger -->|Full Markdown| RawMD[Raw Documents]
+        Merger -->|Full Markdown| RawMD["Raw Documents"]
     end
 
     subgraph Ingestion ["2. Hierarchical Indexing"]
-        RawMD -->|Split| Chunker[recursive_character_splitter]
-        Chunker -->|Detect Packages| Logic{Is Multi-Sport?}
+        RawMD -->|Split| Chunker["recursive_character_splitter"]
+        Chunker -->|Detect Packages| Logic{"Is Multi-Sport?"}
         
-        Logic -- Yes --> Parent[Parent Doc (Full Context)]
-        Logic -- Yes --> Child[Child Doc (Specific Sport)]
+        Logic -- Yes --> Parent["Parent Doc (Full Context)"]
+        Logic -- Yes --> Child["Child Doc (Specific Sport)"]
         Logic -- No --> Child
         
-        Parent -.->|Store ID| VectorDB[(ChromaDB)]
+        Parent -.->|Store ID| VectorDB[("ChromaDB")]
         Child -->|Embed via E5| VectorDB
     end
 
     subgraph Chatbot ["3. Hand-Crafted RAG Engine"]
-        User[User Query] -->|Input| Memory[Manual History Window]
-        Memory -->|Context| Engine[RAG Engine]
+        User["User Query"] -->|Input| Memory["Manual History Window"]
+        Memory -->|Context| Engine["RAG Engine"]
         
-        Engine -->|Detect Sport| Intent[Intent Classifier]
+        Engine -->|Detect Sport| Intent["Intent Classifier"]
         Intent -->|Filter| VectorDB
         
-        VectorDB -->|Retrieve Children| Hits[Top-K Chunks]
-        Hits -->|Fetch Parent| Context_Build[Context Assembler]
+        VectorDB -->|Retrieve Children| Hits["Top-K Chunks"]
+        Hits -->|Fetch Parent| Context_Build["Context Assembler"]
         
-        Context_Build -->|Prompt| LLM[Databricks/OpenAI LLM]
+        Context_Build -->|Prompt| LLM["Databricks/OpenAI LLM"]
         LLM -->|Response| User
     end
 
