@@ -44,7 +44,6 @@ with gr.Blocks(title="AIS Sport RAG") as demo:
         with gr.Column(scale=4):
             chatbot = gr.ChatInterface(
                 respond,
-                type="messages",
                 title="Conversation",
                 description="Ask me about packages, prices, and channels.",
             )

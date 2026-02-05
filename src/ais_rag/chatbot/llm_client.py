@@ -2,13 +2,21 @@ import os
 from openai import OpenAI
 
 class LLMClient:
-    def __init__(self, api_key=None, base_url=None, model_name="databricks-claude-sonnet-4-5"):
+    def __init__(self, api_key=None, base_url=None, model_name=None):
+        # 1. Try Databricks Config
         self.api_key = api_key or os.getenv("DATABRICKS_TOKEN")
         self.base_url = base_url or os.getenv("DATABRICKS_ENDPOINT")
-        self.model_name = model_name
+        self.model_name = model_name or "databricks-claude-sonnet-4-5"
         
+        # 2. Fallback to Standard OpenAI
         if not self.api_key:
-            print("⚠️ WARNING: DATABRICKS_TOKEN not set.")
+            self.api_key = os.getenv("OPENAI_API_KEY")
+            self.base_url = None # Reset base_url to default (OpenAI's servers)
+            if not model_name:
+                self.model_name = "gpt-4o" # Default for standard OpenAI
+            
+        if not self.api_key:
+            print("⚠️ WARNING: No API Key found (DATABRICKS_TOKEN or OPENAI_API_KEY). LLM calls will fail.")
             
         self.client = OpenAI(
             api_key=self.api_key,

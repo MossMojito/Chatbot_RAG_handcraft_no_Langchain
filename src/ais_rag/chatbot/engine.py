@@ -1,7 +1,7 @@
 import json
 import re
 from typing import List, Dict, Optional
-from ..config import AVAILBLE_SPORTS, PACKAGE_TO_SPORT, K_CHUNKS, MAX_LLM_TOKENS
+from ..config import AVAILABLE_SPORTS, PACKAGE_TO_SPORT, K_CHUNKS, MAX_LLM_TOKENS
 from ..ingestion.vector_store import VectorStore
 from .memory import ConversationMemory
 from .llm_client import LLMClient

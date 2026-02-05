@@ -6,3 +6,4 @@ gradio
 python-dotenv
 nest_asyncio
 playwright
+langchain-text-splitters
