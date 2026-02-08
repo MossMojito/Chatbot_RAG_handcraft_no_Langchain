@@ -49,18 +49,25 @@ flowchart TD
         Child -->|Embed via E5| VectorDB
     end
 
-    subgraph Chatbot ["3. Hand-Crafted RAG Engine"]
+    subgraph Chatbot ["3. RAG Engine Logic"]
         User[User Query] -->|Input| Memory[Conversation Memory]
         Memory -->|Context| Engine[RAG Engine Logic]
         
-        %% Flow: Engine calls the Rewriter
-        Engine -->|Step 1: Analyze| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
+        %% Strategy 1: Always rewrite
+        Engine -->|Step 1: Unified Analysis| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
         Rewriter -->|Step 2: Search| VectorDB
         
-        VectorDB -->|Retrieve Children| Hits[Top-K Chunks]
-        Hits -->|Fetch Parent| Context_Build[Context Assembler]
+        VectorDB -->|Retrieve Hits| Hits[Top-K Chunks]
         
-        Context_Build -->|Prompt| LLM[OpenAI / Compatible LLM]
+        %% Strategy 2: Conditional Hierarchy
+        Hits --> Logic{Is Hierarchy/Bundle?}
+        Logic -- Yes --> Parent[Fetch Parent Doc]
+        Logic -- No --> Chunk[Use Specific Chunk]
+        
+        Parent --> Assembler
+        Chunk --> Assembler
+        
+        Assembler["**Context Assembler**<br>(Fuses Rewritten Query + Best Context)"] -->|Prompt| LLM[LLM Generation]
         LLM -->|Response| User
     end
 
@@ -69,7 +76,6 @@ flowchart TD
     style Chatbot fill:#e8f5e9,stroke:#1b5e20,color:black
 ```
 
-### 🧠 Deep Dive: The "Context Assembler"
 ### 🧠 Deep Dive: The "Context Assembler"
 The **Context Assembler** is the intelligent fusion layer that brings these strategies together.
 It takes:
