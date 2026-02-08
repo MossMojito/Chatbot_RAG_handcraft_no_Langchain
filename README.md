@@ -36,7 +36,7 @@ This repository is a **Reference Implementation** of advanced RAG techniques.
 ```text
 .
 ├── 📂 data/
-│   └── synthetic_raw/       # Minimal Perfect Dataset (NBA + Ultimate)
+│   └── synthetic_raw/       # Reference Dataset (Schema Only)
 │   └── processed/           # Structure for Parent-Child relationships
 ├── 📂 src/ais_rag/          # Core Logic
 │   ├── ⚙️ ingestion/
