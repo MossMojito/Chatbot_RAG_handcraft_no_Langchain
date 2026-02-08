@@ -28,10 +28,17 @@ flowchart TD
         Engine -->|Step 1: Analyze| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
         Rewriter -->|Step 2: Search| VectorDB
         
-        VectorDB -->|Retrieve Children| Hits[Top-K Chunks]
-        Hits -->|Fetch Parent| Context_Build[Context Assembler]
+        VectorDB -->|Retrieve| Hits[Top-K Raw Results]
         
-        Context_Build -->|Prompt| LLM[OpenAI / Compatible LLM]
+        %% Strategy 2: Per-Result Logic
+        Hits --> RetrievalLogic{Checkpoint:<br>Is Multi-Sport?}
+        RetrievalLogic -- Yes --> FetchedParent[Fetch Parent JSON]
+        RetrievalLogic -- No --> SpecificChunk[Use Chunk Text]
+        
+        FetchedParent --> Assembler
+        SpecificChunk --> Assembler
+        
+        Assembler["**Context Assembler**<br>(Fuses Rewritten Query + Mixed Context)"] -->|Prompt| LLM[LLM Generation]
         LLM -->|Response| User
     end
 
@@ -39,3 +46,4 @@ flowchart TD
     style Ingestion fill:#fff3e0,stroke:#e65100
     style Chatbot fill:#e8f5e9,stroke:#1b5e20
     style Rewriter fill:#ffccbc,stroke:#bf360c,stroke-width:2px
+    linkStyle default stroke:black,stroke-width:2px;

@@ -57,9 +57,6 @@ flowchart TD
         Engine -->|Step 1: Unified Analysis| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
         Rewriter -->|Step 2: Search| VectorDB
         
-        VectorDB -->|Retrieve Hits| Hits[Top-K Chunks]
-        
-        %% Strategy 2: Conditional Hierarchy
         VectorDB -->|Retrieve| Hits[Top-K Raw Results]
         
         %% Strategy 2: Per-Result Logic
