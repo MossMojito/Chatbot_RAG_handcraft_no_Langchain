@@ -63,21 +63,21 @@ This repository is a **Reference Implementation** of advanced RAG techniques.
 ### 1. Unified Analysis Architecture (`rewriter.py`)
 Instead of chaining multiple LLM calls (latency heavy), we use a single purpose-built prompt to:
 *   **Rewrite** the user query.
-*   **Detect Sport** context (e.g., "NBA").
-*   **Identify Intent** (e.g., "Price", "Package Details").
+*   **Detect Product Category** context (e.g., "Enterprise Software").
+*   **Identify Intent** (e.g., "Pricing", "Compatibility").
 *   **Return JSON** for deterministic routing.
 
 ### 2. Sticky Context Management (`engine.py`)
-The system implements a "Sticky State" separate from the conversation history.
-*   *User*: "How much is NBA?" -> **State Locked**: `Sport=NBA`
-*   *User*: "What about the other one?" -> **Rewriter** sees state -> **Rewrite**: "What about [NBA] other options?"
+The system implements a **Sticky State** separate from conversation history.
+*   *User*: "Tell me about the Pro Plan." -> **State Locked**: `Product='Pro Plan'`
+*   *User*: "What is the price?" -> **Rewriter** sees state -> **Rewrite**: "What is the price of [Pro Plan]?"
 
 ### 3. Hierarchical Retrieval (`hierarchy.py`)
 **Problem**: Vector search retrieves small fragments (Children) that lack context.
 **Solution**:
-1.  **Index**: Small, specific chunks (e.g., "EPL Price is 299").
-2.  **Retrieve**: When a chunk is hit, the system fetches the **Parent Document** (Full Package Table).
-3.  **Generate**: The LLM receives the full context, ensuring it knows that "Play Ultimate" contains both EPL and NBA.
+1.  **Index**: Small, specific chunks (e.g., "4K Support included").
+2.  **Retrieve**: When a chunk is hit, the system fetches the **Parent Document** (Full Product Brochure).
+3.  **Generate**: The LLM receives the full context, ensuring it knows that "Enterprise Bundle" includes specific features from multiple sub-products.
 
 ---
 *This project strictly demonstrates the architectural implementation of V3 RAG Logic as defined in `260114_ais_sport7.ipynb`.*
