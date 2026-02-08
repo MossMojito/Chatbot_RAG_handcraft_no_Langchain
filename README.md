@@ -44,12 +44,12 @@ flowchart TD
     end
 
     subgraph Chatbot ["3. Hand-Crafted RAG Engine"]
-        User[User Query] -->|Input| Memory[Manual History Window]
-        Memory -->|Context| Engine[RAG Engine]
+        User[User Query] -->|Input| Memory[Conversation Memory]
+        Memory -->|Context| Engine[RAG Engine Logic]
         
-        %% This is the text change: Intent -> Combined Rewriter
-        Engine -->|Unified Analysis| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
-        Rewriter -->|Filter/Search| VectorDB
+        %% Flow: Engine calls the Rewriter
+        Engine -->|Step 1: Analyze| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
+        Rewriter -->|Step 2: Search| VectorDB
         
         VectorDB -->|Retrieve Children| Hits[Top-K Chunks]
         Hits -->|Fetch Parent| Context_Build[Context Assembler]
@@ -57,6 +57,11 @@ flowchart TD
         Context_Build -->|Prompt| LLM[OpenAI / Compatible LLM]
         LLM -->|Response| User
     end
+
+    style Scraper fill:#e1f5fe,stroke:#01579b
+    style Ingestion fill:#fff3e0,stroke:#e65100
+    style Chatbot fill:#e8f5e9,stroke:#1b5e20
+    style Rewriter fill:#ffccbc,stroke:#bf360c,stroke-width:2px
 ```
 
 ### 🧠 Deep Dive: The "Context Assembler"
