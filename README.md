@@ -80,6 +80,15 @@ The system implements a **Sticky State** separate from conversation history.
 3.  **Generate**: The LLM receives the full context, ensuring it knows that "Enterprise Bundle" includes specific features from multiple sub-products.
 
 ---
-*This project strictly demonstrates the architectural implementation of V3 RAG Logic as defined in `260114_ais_sport7.ipynb`.*
+*This architecture is a reference implementation for complex RAG systems.*
 
 ## 🧪 Verified Scenarios
+
+This architecture is verified to handle:
+1.  **Context-Aware Price Check**:
+    *   *User*: "How much is the Pro Plan?" (Context Locks to `Pro Plan`)
+    *   *User*: "Does it include API access?" (System knows 'it' = Pro Plan)
+2.  **Cross-Product Inquiry**:
+    *   *User*: "What about the Enterprise Bundle?" (Context Switches, retrieval targets Enterprise parent doc)
+3.  **Feature Lookup**:
+    *   *User*: "Which plan has 24/7 support?" (Retrieves parent documents to check feature lists across products)
