@@ -1,6 +1,6 @@
-# 📚 Product Catalog Information RAG in Telco
+# 📚 Product Catalog Information RAG
 
-This project demonstrates an **Use-case RAG Architecture** designed for Product Information Systems.
+This project demonstrates an **Enterprise-Grade RAG Architecture** designed for complex Product Information Systems.
 
 ## 💡 The Use Case
 Imagine you have a system with **thousands of products**. Each product has its own specific information, pricing, and details.
@@ -11,18 +11,12 @@ However, simply "feeding" documents to a standard RAG chatbot often fails in thi
 1.  **Context Confusion**: If a user asks *"How much is it?"*, the bot doesn't know *which* product they are currently discussing.
 2.  **Fragmented Answers**: The bot might find a small text chunk saying *"Includes 5G support"*, but fail to understand *which plan* that feature belongs to, leading to wrong answers.
 
-### ✅ Our Solution (Two Distinct Strategies)
-We implemented **two separate but complementary strategies** to solve these problems:
+### ✅ Our Solution (V3 Architecture)
+To solve these specific problems, we implemented the **V3 Logic** in this architecture:
 
-1.   **The Core: Context-Aware Query Rewriting**
-     *   *Problem*: Users ask vague questions like "price?".
-     *   *Solution*: The system maintains state and rewrites every query to be self-contained (e.g., "price of Pro Plan") **before** it touches the vector database. This ensures high-accuracy retrieval for *any* query.
-
-2.   **The Add-on: Hierarchical Retrieval (Parent-Child)**
-     *   *Problem*: Some products are "Bundles" of many smaller items. Finding one item doesn't explain the whole bundle.
-     *   *Solution*: **Only when** a detected product is part of a hierarchy (like a Bundle), the system automatically fetches the **Parent Document** to give the LLM the full context of how items relate to each other.
-
----
+1.   **Advanced Query Rewriting**: The system doesn't just search; it *understands*. It rewrites vague questions (e.g., "price?") into precise, product-specific queries (e.g., "price of Pro Plan") before searching.
+2.   **Sticky Product Context**: It "remembers" the active product, ensuring follow-up questions ("What about the other one?") are correctly routed to the alternative product's context.
+3.   **Parent-Child Retrieval**: When a specific feature is found, the system retrieves the **complete product documentation** (Parent), preventing fragmented answers.
 
 ### 🏗️ Architecture Diagram
 
@@ -70,15 +64,11 @@ flowchart TD
 ```
 
 ### 🧠 Deep Dive: The "Context Assembler"
-### 🧠 Deep Dive: The "Context Assembler"
-The **Context Assembler** is the intelligent fusion layer that brings these strategies together.
-It takes:
-1.  **The Rewritten Query** (Architecture 1): Ensures the question is precise.
-2.  **The Best Available Context** (Architecture 2):
-    *   If it's a simple product -> Retrieves specific **Chunks**.
-    *   If it's a complex Bundle -> Retrieves the full **Parent Document**.
-
-It then **Assembles** the final prompt: *"The user is asking about [Product A] (Rewritten). Here is the [Full Brochure/Specific Spec] (Context). Answer specifically about Pricing."*
+The **Context Assembler** is the core of our V3 strategies. It is not just a concatenation of text; it is an intelligent layer that:
+*   **Takes** the *Rewritten Query* (which has the correct product name inserted).
+*   **Matches** it with *Parent Documents* (full context) instead of just small fragments.
+*   **Assembles** a prompt that tells the LLM: *"The user is asking about [Product A]. Here is the Full Brochure. Answer specifically about Pricing."*
+This ensures the LLM has the **Perfect Context** to generate a smooth, accurate answer.
 
 ---
 
