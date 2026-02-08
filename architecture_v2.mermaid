@@ -1,0 +1,41 @@
+flowchart TD
+    subgraph Scraper ["1. OCR-Enhanced Scraping"]
+        Web[Sports Website] -->|Auth & Crawl| Crawler[Crawl4AI Engine]
+        Crawler -->|Raw HTML| HTML_Parse[HTML Parser]
+        Crawler -->|Image URLs| OCR[Qwen2.5-VL OCR]
+        OCR -->|Extracted Text| Merger[Content Merger]
+        HTML_Parse --> Merger
+        Merger -->|Full Markdown| RawMD[Raw Documents]
+    end
+
+    subgraph Ingestion ["2. Hierarchical Indexing"]
+        RawMD -->|Split| Chunker[recursive_character_splitter]
+        Chunker -->|Detect Packages| Logic{Is Multi-Sport?}
+        
+        Logic -- Yes --> Parent["Parent Doc (Full Context)"]
+        Logic -- Yes --> Child["Child Doc (Specific Sport)"]
+        Logic -- No --> Child
+        
+        Parent -.->|Store ID| VectorDB[(ChromaDB)]
+        Child -->|Embed via E5| VectorDB
+    end
+
+    subgraph Chatbot ["3. Hand-Crafted RAG Engine"]
+        User[User Query] -->|Input| Memory[Conversation Memory]
+        Memory -->|Context| Engine[RAG Engine Logic]
+        
+        %% Flow: Engine calls the Rewriter
+        Engine -->|Step 1: Analyze| Rewriter["**Combined Rewriter**<br>(Rewrite + Intent + Product)"]
+        Rewriter -->|Step 2: Search| VectorDB
+        
+        VectorDB -->|Retrieve Children| Hits[Top-K Chunks]
+        Hits -->|Fetch Parent| Context_Build[Context Assembler]
+        
+        Context_Build -->|Prompt| LLM[OpenAI / Compatible LLM]
+        LLM -->|Response| User
+    end
+
+    style Scraper fill:#e1f5fe,stroke:#01579b
+    style Ingestion fill:#fff3e0,stroke:#e65100
+    style Chatbot fill:#e8f5e9,stroke:#1b5e20
+    style Rewriter fill:#ffccbc,stroke:#bf360c,stroke-width:2px
