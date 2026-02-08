@@ -1,33 +1,4 @@
-# 🏆 Adaptive Sports RAG (Technical Showcase)
-
-> **Role**: AI Engineer (End-to-End Implementation)
-> **Tech Stack**: Python, Crawl4AI, ChromaDB, OpenAI (Compatible), Qwen2.5-VL (OCR)
-> **Key Concept**: Hierarchical Retrieval & Adaptive RAG Strategies
-
-## 📖 Overview & Problem Solved
-**The Challenge**: Standard RAG pipelines fail when scraping complex internal sports dashboards. The data is often locked in **promotional images** (banners with prices) or stored in mixed **"Super Bundles"** (multi-sport packages) where a simple chunking strategy loses the context of which sport belongs to which package. Users also ask ambiguous questions like "How much is it?" which require conversation memory.
-
-**The Solution**: A custom-engineered RAG pipeline that:
-1.  **"Reads" Images**: Uses a Vision-Language Model (Qwen2.5-VL) to OCR promotional banners.
-2.  **Preserves Context**: Implements a **Parent-Child Indexing** strategy. We search small chunks (Children) for precision but feed the full pricing table (Parent) to the LLM.
-3.  **Adapts to Intent**: Uses a **Router** to detect if a user is asking about a specific sport and filters the vector search accordingly.
-4.  **Rewrites Queries**: Resolves pronouns ("How much is *it*?") using a dedicated **Query Rewriter** module before retrieval.
-
----
-
-## 🏗️ System Architecture
-
-```mermaid
-flowchart TD
-    subgraph Data_Pipeline ["1. Intelligent Ingestion"]
-        Web["Sports Data"] -->|Crawl| Crawler["Crawl4AI"]
-        Crawler -->|Text + OCR| RawMD["Raw Markdown"]
-        RawMD -->|Split| Chunker["Chunker + Hierarchy Builder"]
-        Chunker -->|Index Children| VectorDB[("ChromaDB")]
-        Chunker -.->|Store Parents| ParentCache["Parent JSON Cache"]
-    end
-
-  # 🏆 AIS Sport RAG (Advanced Strategies)
+# 🏆 AIS Sport RAG (Advanced Strategies)
 
 This project demonstrates **Advanced RAG Strategies** for a Sports Package Assistant.
 It moves beyond simple "Semantic Search" to implement **Hierarchical Retrieval** and **Context-Aware Query Rewriting** (V3 Logic).
@@ -131,7 +102,7 @@ This codebase is verified to handle:
 
 3.  **Run Chatbot**:
     ```bash
-    # Set your OpenAI API Key (or compatible endpoint)
+# Set your OpenAI API Key (or compatible endpoint)
     export OPENAI_API_KEY="sk-..."
     python app.py
     ```
