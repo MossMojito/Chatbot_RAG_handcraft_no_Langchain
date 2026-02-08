@@ -31,7 +31,7 @@ flowchart TD
         VectorDB -->|Retrieve| Hits[Top-K Raw Results]
         
         %% Strategy 2: Per-Result Logic
-        Hits --> RetrievalLogic{Checkpoint:<br>Is Multi-Sport?}
+        Hits --> RetrievalLogic{**LOGIC CHECK**:<br>Is Multi-Sport?}
         RetrievalLogic -- Yes --> FetchedParent[Fetch Parent JSON]
         RetrievalLogic -- No --> SpecificChunk[Use Chunk Text]
         
