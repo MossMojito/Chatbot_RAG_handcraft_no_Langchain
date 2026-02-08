@@ -58,9 +58,9 @@ flowchart TD
         LLM -->|Response| User
     end
 
-    style Scraper fill:#e1f5fe,stroke:#01579b
-    style Ingestion fill:#fff3e0,stroke:#e65100
-    style Chatbot fill:#e8f5e9,stroke:#1b5e20
+    style Scraper fill:#e1f5fe,stroke:#01579b,color:black
+    style Ingestion fill:#fff3e0,stroke:#e65100,color:black
+    style Chatbot fill:#e8f5e9,stroke:#1b5e20,color:black
 ```
 
 ### 🧠 Deep Dive: The "Context Assembler"
