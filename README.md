@@ -1,40 +1,33 @@
-# 📚 Product Catalog RAG (Advanced Architecture)
+# 📚 Product Catalog Information RAG
 
-This project demonstrates **Advanced RAG Strategies** for a specific **Product Catalog AI Assistant**.
-It moves beyond simple "Semantic Search" to implement **Hierarchical Retrieval** and **Context-Aware Query Rewriting** (V3 Logic).
+This project demonstrates an **Enterprise-Grade RAG Architecture** designed for complex Product Information Systems.
 
-> **Note**: This project uses a **Minimal Perfect Dataset** concept to clearly demonstrate the *logic* of the strategies.
+## 💡 The Use Case
+Imagine you have a system with **thousands of products**. Each product has its own specific information, pricing, and details.
+Instead of forcing users or staff to manually search for each **Product ID** and read through long documentation, a **Chatbot RAG** is the ideal solution to instantly retrieve answers.
 
----
+### ❌ The Problem
+However, simply "feeding" documents to a standard RAG chatbot often fails in this scenario:
+1.  **Context Confusion**: If a user asks *"How much is it?"*, the bot doesn't know *which* product they are currently discussing.
+2.  **Fragmented Answers**: The bot might find a small text chunk saying *"Includes 5G support"*, but fail to understand *which plan* that feature belongs to, leading to wrong answers.
 
-## 🚀 Key Strategies Implemented
-
-### 1. Context-Aware Rewriting (V3 Logic)
-Instead of independent LLM calls, we use a **Combined Analysis** approach:
-- **One LLM Call** performs:
-    1.  **Rewrite**: Converts vague queries (e.g., "price?") into standalone queries ("price of NBA?").
-    2.  **Sport Locking**: Detects if the user is asking about a specific sport (e.g., NBA) and "locks" the context.
-    3.  **Topic Tracking**: Tracks the **Intent** (e.g., Pricing, Promotion) so the conversation flows naturally even when switching sports.
-
-### 2. Hierarchical Retrieval (Parent-Child)
-A common RAG failure is retrieving small chunks that lose broad context. We solve this with **Parent-Child Indexing**:
-- **Child Chunks**: Small, specific text (e.g., "NBA is in Ultimate").
-- **Parent Document**: The full package details (Channels, Streaming Services, Terms).
-- **Strategy**: When a search hits a *Child* chunk, the engine automatically fetches the **Full Parent Document** for the LLM.
-    - *Result*: The bot understands that "Play Ultimate" includes *both* NBA and Netflix/Disney+, not just the sport mentioned in the chunk.
+### ✅ Our Solution (V3 Architecture)
+To solve these specific problems, we implemented the **V3 Logic** in this architecture:
+1.   **Sticky Product Context**: The system "remembers" which product is being discussed (e.g., "Pro Plan"), so follow-up questions are always accurate.
+2.   **Parent-Child Retrieval**: When the system finds a specific detail (Child), it automatically retrieves the **complete product information** (Parent), ensuring the AI understands the full picture.
 
 ---
 
-## 🛠️ Architecture
+## �️ System Components
 
 1.  **Ingestion (`src/ingestion`)**:
     - Splits generic files into chunks.
-    - specialized splitting for **Multi-Sport Packages** (Parent) -> Sport-Specific Sections (Children).
+    - specialized splitting for **Multi-Product Bundles** (Parent) -> Product-Specific Sections (Children).
 2.  **Engine (`src/chatbot`)**:
-    - **CombinedRewriter**: Manages state (Sport/Intent) and rewrites queries.
+    - **CombinedRewriter**: Manages state (Product/Intent) and rewrites queries.
     - **RAGEngine**: Orchestrates retrieval, using state to filter and fetch Parents.
-3.  **UI (`app.py`)**:
-    - Simple Gradio interface to demonstrate the chat.
+3.  **Frontend Interface**:
+    - Simple chat interface for demonstration.
 
 ## 📦 Repository Structure
 
