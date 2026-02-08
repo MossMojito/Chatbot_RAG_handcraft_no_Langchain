@@ -61,11 +61,11 @@ flowchart TD
         
         %% Strategy 2: Conditional Hierarchy
         Hits --> RetrievalLogic{Is Hierarchy/Bundle?}
-        RetrievalLogic -- Yes --> Parent[Fetch Parent Doc]
-        RetrievalLogic -- No --> Chunk[Use Specific Chunk]
+        RetrievalLogic -- Yes --> FetchedParent[Fetch Parent Doc]
+        RetrievalLogic -- No --> SpecificChunk[Use Specific Chunk]
         
-        Parent --> Assembler
-        Chunk --> Assembler
+        FetchedParent --> Assembler
+        SpecificChunk --> Assembler
         
         Assembler["**Context Assembler**<br>(Fuses Rewritten Query + Best Context)"] -->|Prompt| LLM[LLM Generation]
         LLM -->|Response| User
