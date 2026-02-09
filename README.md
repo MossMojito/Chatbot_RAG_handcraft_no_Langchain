@@ -145,6 +145,31 @@ The system implements a **Sticky State** separate from conversation history.
 2.  **Retrieve**: When a chunk is hit, the system fetches the **Parent Document** (Full Product Brochure).
 3.  **Generate**: The LLM receives the full context, ensuring it knows that "Enterprise Bundle" includes specific features from multiple sub-products.
 
+### 4. Full-Context Chunking Strategy (`all_md_chunk.py`)
+**Problem**: Traditional chunking blindly cuts text or summarizes it, losing critical details (specs, prices) needed for accurate RAG answers.
+**Solution**: We store the **Full Unaltered Text** but extract **Structure (Headers/Bold)** as Metadata for search.
+
+```python
+# 1. Structure-Aware Chunking (Preserves Context via Markdown Headers)
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=3000,
+    chunk_overlap=800,
+    # Priority: Keep headers (##) attached to their content
+    separators=["\n## ", "\n### ", "\n\n", "\n", "。", ". ", " ", ""],
+    length_function=len
+)
+
+# 2. Metadata Extraction (Enhances Precision)
+# We index these terms for search, but KEEP the original text 100% intact.
+def extract_structure_metadata(chunk):
+    metadata = {}
+    # Extract headers to know "What is this section about?"
+    metadata["headers"] = re.findall(r'^##\s+(.+)$', chunk, re.MULTILINE)
+    # Extract bold terms (key features/entities)
+    metadata["bold_text"] = re.findall(r'\*\*([^*]+)\*\*', chunk)
+    return metadata
+```
+
 ---
 *This architecture is a reference implementation for complex RAG systems.*
 
