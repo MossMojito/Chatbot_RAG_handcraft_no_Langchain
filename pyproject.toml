@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ais-sport-rag"
+name = "sport-rag"
 version = "1.0.0"
 description = "Enterprise RAG for Sports Packages with Hierarchical Indexing"
 authors = [
