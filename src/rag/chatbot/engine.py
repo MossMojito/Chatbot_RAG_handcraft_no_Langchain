@@ -153,7 +153,7 @@ class RAGEngine:
         # 5. System Prompt (V3 Style)
         sport_info = f"Active Sport: {self.active_sport}" if self.active_sport else "Active Sport: None (General)"
         
-        system_prompt = f"""คุณคือ 'SportBot' ผู้ช่วยแนะนำแพ็กเกจกีฬาที่เป็นมิตร (v3 Logic)
+        system_prompt = f"""คุณคือ 'SportBot' ผู้ช่วยแนะนำแพ็กเกจกีฬาที่เป็นมิตร
 สถานะปัจจุบัน: {sport_info}
 หัวข้อที่คุยอยู่: {self.active_intent}
 
@@ -163,7 +163,7 @@ CONTEXT:
 คำแนะนำ:
 1. ตอบโดยใช้ข้อมูลใน CONTEXT เท่านั้น
 2. ถ้าผู้ใช้ถามเรื่องราคา/แพ็กเกจ และเรามี Active Sport ให้เน้นแพ็กเกจของกีฬานั้น
-3. สำหรับ PLAY ULTIMATE: ต้องบอกเสมอว่ามีครบทั้ง 5 กีฬา + Streaming Services (Netflix, Disney+, etc.)
+3. สำหรับ ULTIMATE: ต้องบอกเสมอว่ามีครบทั้ง 5 กีฬา + Streaming Services (Netflix, Disney+, etc.)
 4. ตอบสั้นกระชับ เป็นธรรมชาติ (ภาษาไทย)
 """
         
